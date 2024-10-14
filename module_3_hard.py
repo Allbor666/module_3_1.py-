@@ -1,19 +1,21 @@
-def calculate_structure_sum(data_structure):
-    total_sum = 0
-    def recursive_sum(data):
-        nonlocal total_sum
-        for element in data:
-            if isinstance(element, (int, float)):
-                total_sum += element
-            elif isinstance(element, str):
-                total_sum += len(element)
-            elif isinstance(element, (list, tuple, dict)):
-                recursive_sum(element)
-            elif isinstance(element, set):  # Added set type check
-                for item in element:
-                    recursive_sum([item])
-    recursive_sum(data_structure)
-    return total_sum
+def calculate_structure_sum(structure):
+    count_num = 0
+    count_str = 0
+
+    if isinstance(structure, int):
+        count_num += structure
+    elif isinstance(structure, str):
+        count_str += len(structure)
+    elif isinstance(structure, (list, tuple, set)):
+        for item in structure:
+            count_num += calculate_structure_sum(item)
+    elif isinstance(structure, dict):
+        for key, value in structure.items():
+            count_num += calculate_structure_sum(key)
+            count_str += calculate_structure_sum(value)
+
+    return count_num + count_str
+
 data_structure = [
     [1, 2, 3],
     {'a': 4, 'b': 5},
@@ -21,5 +23,6 @@ data_structure = [
     "Hello",
     ((), [{(2, 'Urban', ('Urban2', 35))}])
 ]
+
 result = calculate_structure_sum(data_structure)
 print(result)
